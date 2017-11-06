@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Calibri' rel='stylesheet'>
+        <title>Color Game</title>
+        <style>
+
+        * {
+             margin: 0;
+             padding: 0;
+         }
+
+        body {
+            background-color: black;
+            color: LightGrey;
+            text-align: center;
+            font-family: 'Calibri';
+        }
+
+        .header {
+            width: 100%;
+            background-color: LightBlue;
+            color: black;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+
+        .rules {
+            padding: 10px;
+            display: block;
+        }
+
+        .boxes {
+            width: 100%;
+        }
+
+
+        .boxE {
+            width: 100px;
+            height: 25px;
+            border-radius: 10px;
+            margin: auto;
+            padding-top: 0px;
+            background-color: green;
+            color: black;
+            font-size: 20px;
+        }
+
+
+        .boxH {
+            width: 100px;
+            height: 25px;
+            border-radius: 10px;
+            margin: auto;
+            padding-top: 0px;
+            background-color: black;
+            color: green;
+            font-size: 20px;
+        }
+
+
+        .choiceR {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+
+        .box {
+            width: 210px;
+            height: 55px;
+            border-radius: 20px;
+            margin: auto;
+            padding-top: 20px;
+            background-color: green;
+            color: black;
+            font-size: 20px;
+            text-transform: capitalize;
+        }
+
+
+        .choice {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+
+        #red {
+            background-color: Red;
+        }
+
+        #orange {
+            background-color: Orange;
+        }
+
+        #yellow {
+            background-color: Yellow;
+        }
+
+        #green {
+            background-color: Green;
+        }
+
+        #blue {
+            background-color: Blue;
+        }
+
+        #pink {
+            background-color: Pink;
+        }
+
+        #purple {
+            background-color: Purple;
+        }
+
+        #Grey {
+            background-color: Grey;
+        }
+
+
+        .btn {
+            width: 100px;
+            height: 50px;
+            border-radius: 20px;
+            background-color: LightBlue;
+            font-size: 20px;
+        }
+
+
+        .game {
+            padding: 10px;
+            display: none;
+            border: 5px solid LightBlue;
+            border-radius: 5px;
+        }
+
+
+        .time {
+            display: inline-block;
+            float: left;
+        }
+
+
+        .score {
+            display: inline-block;
+            float: right;
+        }
+
+
+        .timeTxt {
+            display: inline-block;
+            float: left;
+        }
+
+
+        .scoreTxt {
+            display: inline-block;
+            float: right;
+        }
+
+
+        .info {
+            margin: auto;
+            font-size: 30px;
+        }
+
+
+        #choices {
+            display: none;
+            margin: auto;
+        }
+
+        .settings {
+            margin-top: 10px;
+        }
+
+
+        .mode {
+            width: 75px;
+            height: 25px;
+            border-radius: 10px;
+            background-color: LightBlue;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        #easy {
+            background-color: green;
+        }
+
+        #med {
+            background-color: yellow;
+        }
+
+        #hard {
+            background-color: red;
+        }
+
+        #curMode {
+            font-size: 20px;
+            color: green;
+        }
+
+        a {
+            color: LightBlue;
+            font-size: 16px;
+        }
+
+
+        .cw {
+            width: 100%;
+            text-align: center;
+            margin: 20px auto;
+            position: relative;
+            bottom: 0;
+        }
+</style>
+<script>
+
+var colors = ["red", "orange", "yellow", "green", "blue", "pink", "purple", "grey"];
+
+
+var names = ["red", "orange", "yellow", "green", "blue", "pink", "purple", "grey"];
+
+
+function playNow() {
+    var rules = document.getElementById("rules");
+    var game = document.getElementById("game");
+    rules.style.display = "none";
+    game.style.display = "block";
+}
+
+
+function start() {
+    var start = document.getElementById("startBtn");
+    var choices = document.getElementById("choices");
+
+
+    document.getElementById("info").innerHTML = "";
+
+
+    document.getElementById("score").innerHTML = "0";
+    start.style.display = "none";
+    choices.style.display = "block";
+
+    countdown('countdown');
+
+    if(easy === true){
+        changeEasy();
+    }
+    else if(hard === true){
+        changeHard();
+    }
+}
+
+
+var interval;
+var minutes = 0;
+var seconds = 30;
+
+function countdown(element) {
+    interval = setInterval(function() {
+        var el = document.getElementById(element);
+        if(seconds === 0) {
+            if(minutes === 0) {
+                el.innerHTML = "Time up";
+                winGame();
+                clearInterval(interval);
+                return;
+            }
+            else {
+                minutes--;
+                seconds = 30;
+            }
+        }
+        if(minutes > 0) {
+            var minute_text = minutes + (minutes > 1 ? ' minutes' : ' minute');
+        }
+        else {
+            var minute_text = '';
+        }
+        var second_text = seconds > 1 ? 'seconds' : 'second';
+        if(seconds < 10){
+            el.innerHTML = ':0' + seconds;
+        }
+        else{
+            el.innerHTML = ':' +  seconds;
+        }
+        seconds--;
+    }, 1000);
+}
+
+
+function winGame (){
+    minutes = 0;
+    seconds = 30;
+    var score = document.getElementById("score").innerHTML;
+
+    document.getElementById("startBtn").style.display = "inline-block";
+    document.getElementById("choices").style.display = "none";
+    document.getElementById("info").innerHTML = "Final Score:<br>" + score;
+}
+
+
+Array.prototype.getRandom = function(cut){
+    var i= Math.floor(Math.random()*this.length);
+    if(cut && i in this){
+    return this.splice(i, 1)[0];
+    }
+    return this[i];
+}
+
+
+function changeEasy() {
+    var box = document.getElementById("box");
+    //Random color from array using above function
+    box.style.backgroundColor = colors.getRandom();
+    //Random color name from array using above function
+    box.innerHTML = names.getRandom();
+    box.style.color = "black";
+}
+
+function changeHard() {
+    var box = document.getElementById("box");
+
+    box.style.backgroundColor = "black";
+
+    box.innerHTML = names.getRandom();
+    box.style.color = colors.getRandom();
+    box.style.fontSize = "30px";
+}
+
+
+function check(elem) {
+    var info = document.getElementById("info");
+    var box = document.getElementById("box");
+    if(easy === true){
+        if(elem.style.backgroundColor == box.innerHTML){
+            scoreUp();
+            info.innerHTML = "Correct";
+            info.style.color = "green";
+            changeEasy();
+        }
+        else{ //If wrong
+            info.innerHTML = "Wrong";
+            info.style.color = "red";
+            changeEasy();
+        }
+    }
+    else if(med === true){
+        if(elem.style.backgroundColor == box.style.color){
+            scoreUp();
+            info.innerHTML = "Correct";
+            info.style.color = "green";
+            changeHard();
+        }
+        else{
+            info.innerHTML = "Wrong";
+            info.style.color = "red";
+            changeHard();
+        }
+    }
+    else if(hard === true){
+        if(elem.style.backgroundColor == box.style.color){
+            scoreUp();
+            info.innerHTML = "Correct";
+            info.style.color = "green";
+            changeHard();
+        }
+        else{
+            scoreDn();
+            info.innerHTML = "Wrong";
+            info.style.color = "red";
+            changeHard();
+        }
+    }
+}
+
+
+function scoreUp() {
+    var score = parseInt(document.getElementById("score").innerHTML);
+    score++;
+    document.getElementById("score").innerHTML = score;
+}
+
+function scoreDn() {
+    var score = parseInt(document.getElementById("score").innerHTML);
+    score--;
+    document.getElementById("score").innerHTML = score;
+}
+
+var easy = true;
+var med = false;
+var hard = false;
+function easyMode() {
+    var curMode = document.getElementById("curMode");
+    easy = true;
+    med = false;
+    hard = false;
+    curMode.innerHTML = "Easy";
+    curMode.style.color = "green";
+}
+
+function medMode() {
+    var curMode = document.getElementById("curMode");
+    med = true;
+    easy = false;
+    hard = false;
+    curMode.innerHTML = "Medium";
+    curMode.style.color = "yellow";
+}
+
+function hardMode() {
+    var curMode = document.getElementById("curMode");
+    hard = true;
+    easy = false;
+    med = false;
+    curMode.innerHTML = "Hard";
+    curMode.style.color = "red";
+}
+
+function showRules() {
+    var rules = document.getElementById("rules");
+    var game = document.getElementById("game");
+    game.style.display = "none";
+    rules.style.display = "block";
+}
+
+</script>
+    </head>
+    <body>
+        <div class="header">
+            <h2>Color Game</h2>
+            <p>Created by Rahul J.</p>
+        </div>
+
+
+        <div class="rules" id="rules">
+            <h3>How To Play</h3>
+            <p>In the following game, you will be presented with a box, followed by several color choices. In the box, the background will show a random color as well as text displaying the name of a different color.</p>
+            <br>
+            <p>In medium and hard modes, the box will be gone and the word will be set to a random color.</p>
+            <br>
+            <p>Example:</p>
+
+
+            <div class="boxes">
+                <p>Easy Mode</p>
+                <div class="boxE">
+                    Yellow
+                </div>
+                <br>
+                <p>Hard Mode</p>
+                <div class="boxH">
+                    Yellow
+                </div>
+            </div>
+            <br>
+
+
+            <div class="choiceR" id="red"></div>
+            <div class="choiceR" id="orange"></div>
+            <div class="choiceR" id="yellow"></div>
+            <div class="choiceR" id="green"></div>
+            <br>
+            <div class="choiceR" id="blue"></div>
+            <div class="choiceR" id="pink"></div>
+            <div class="choiceR" id="purple"></div>
+            <div class="choiceR" id="grey"></div>
+            <br>
+            <p>Easy mode: Pick the correct color indicated by the <u>WORD</u> not the color of the box.</p>
+            <br>
+            <p>Medium Mode: Pick the correct color indicated by the <u>COLOR</u> not the word</p>
+            <br>
+            <p>Hard Mode: Same as medium mode however you lose 1 point for each wrong answer!</p>
+            <br>
+            <p>You have 30 seconds to get as many correct answers as possible. Good luck!</p>
+            <br>
+
+
+            <button class="btn" onclick="playNow()">Play Now!</button>
+        </div>
+
+
+        <div class="game" id="game">
+            <div class="timeTxt">Time</div>
+            <div class="scoreTxt">Score</div>
+            <br>
+
+
+            <div class="time" id="countdown">:30</div>
+
+
+            <div class="score" id="score">0</div>
+
+
+            <div class="box" id="box">yellow</div>
+            <br>
+
+            <div id="choices">
+
+            <div class="choice" id="Red" onclick="check(this)" style="background-color:Red"></div>
+            <div class="choice" id="Orange" onclick="check(this)" style="background-color:Orange"></div>
+            <div class="choice" id="Yellow" onclick="check(this)" style="background-color:Yellow"></div>
+            <div class="choice" id="Green" onclick="check(this)" style="background-color:Green"></div>
+            <br>
+            <div class="choice" id="Blue" onclick="check(this)" style="background-color:Blue"></div>
+            <div class="choice" id="Pink" onclick="check(this)" style="background-color:Pink"></div>
+            <div class="choice" id="Purple" onclick="check(this)" style="background-color:Purple"></div>
+            <div class="choice" id="Grey" onclick="check(this)" style="background-color:Grey"></div>
+            </div>
+            <br>
+
+
+            <div class="info" id="info"></div>
+
+            <button class="btn" id="startBtn" onclick="start()">Start</button>
+            <br>
+            <p>Current Mode:</p>
+            <p id="curMode">Easy</p>
+            <br>
+            <button class="mode" id="easy" onclick="easyMode()">Easy</button>&nbsp;
+            <button class="mode" id="med" onclick="medMode()">Medium</button>&nbsp;
+            <button class="mode" id="hard" onclick="hardMode()">Hard</button>
+            <br>
+            <br>
+            <a href="#" id="settings" onclick="showRules()">Rules</a>
+        </div>
+        <div class="cw">&copy 2017 Rahul J.</div>
+        <br>
+    </body>
+</html>
